@@ -7,6 +7,8 @@
 
 # testing
 /coverage
+debug.log
+.eslintcache
 
 # production
 /build
