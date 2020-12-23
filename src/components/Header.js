@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 
 import { ProgressBar } from 'react-bootstrap';
 
-import profile from '../img/profile.png';
-import TodoModal from './TodoModal';
+import AddTodoModal from './AddTodoModal';
 
-function Header() {
+function Header({ profile, todos }) {
   const [modalShow, setModalShow] = useState(false);
+
+  const completedTodos = todos?.filter((todo) =>
+    todo.completed ? todo : null
+  );
 
   return (
     <header className="p-3 bg-white rounded mb-3 shadow">
@@ -23,7 +26,7 @@ function Header() {
           width="36"
           height="36"
           fill="#007BFF"
-          class="bi bi-plus-circle"
+          className="bi bi-plus-circle"
           viewBox="0 0 16 16"
           onClick={() => setModalShow(true)}
         >
@@ -42,7 +45,7 @@ function Header() {
 
       <div className="d-flex justify-content-between align-items-center">
         <p className="h2">
-          Today{' '}
+          Tasks{' '}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -57,11 +60,17 @@ function Header() {
             />
           </svg>
         </p>
-        <p className="h5 text-right">4/12</p>
+        <p className="h5 text-right">
+          {completedTodos.length}/{todos?.length}
+        </p>
       </div>
 
-      <ProgressBar now={60} />
-      <TodoModal show={modalShow} onHide={() => setModalShow(false)} />
+      <ProgressBar
+        now={
+          todos.length === 0 ? 0 : (completedTodos.length / todos.length) * 100
+        }
+      />
+      <AddTodoModal show={modalShow} onHide={() => setModalShow(false)} />
     </header>
   );
 }
