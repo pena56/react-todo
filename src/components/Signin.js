@@ -2,7 +2,7 @@ import React from 'react';
 
 import image from '../img/signin.svg';
 
-function Signin() {
+function Signin({ callback }) {
   return (
     <div className="d-flex flex-column">
       <img
@@ -11,7 +11,10 @@ function Signin() {
         alt="banner"
       />
       <p className="h4 text-center">Track your Activities</p>
-      <button className="btn btn-primary btn-lg text-uppercase">
+      <button
+        onClick={callback}
+        className="btn btn-primary btn-lg text-uppercase"
+      >
         Sign In with Google
       </button>
     </div>

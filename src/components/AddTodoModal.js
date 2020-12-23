@@ -1,34 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import Modal from 'react-bootstrap/Modal';
 
 import { db } from '../firebase';
 
-function TodoModal(props) {
-  const toggleCompleted = () => {
-    const todoRef = db.collection('tasks').doc(props.todo.id);
-    todoRef
-      .update({
-        completed: !props.todo.completed,
-      })
-      .then(() => {
-        console.log('Document successfully updated');
-      })
-      .catch((e) => {
-        console.error(e);
-      });
+import firebase from 'firebase';
+
+function AddTodoModal(props) {
+  const [newTodo, setNewTodo] = useState('');
+
+  const getTodo = (e) => {
+    // console.log(e.target.value);
+    setNewTodo(e.target.value);
   };
 
-  const deleteTodo = () => {
+  const addTodo = () => {
     db.collection('tasks')
-      .doc(props.todo.id)
-      .delete()
-      .then(() => {
-        console.log('Document deleted successfully');
+      .add({
+        todo: newTodo,
+        completed: false,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       })
-      .catch((e) => {
-        console.error(e);
+      .then((ref) => {
+        console.log('Successfully added todo with id :', ref.id);
       });
+
+    setNewTodo('');
   };
 
   return (
@@ -40,38 +37,39 @@ function TodoModal(props) {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          {props.todo.todo}
+          Add New Todo
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        <form>
+          <input onChange={getTodo} className="form-control" value={newTodo} />
+        </form>
+        <hr />
         <div className="d-flex justify-content-between align-items-center">
-          <svg
+          {/* <svg
             xmlns="http://www.w3.org/2000/svg"
             width="30"
             height="30"
             fill="red"
             className="bi bi-trash"
             viewBox="0 0 16 16"
-            onClick={deleteTodo}
           >
             <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
             <path
               fill-rule="evenodd"
               d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
             />
-          </svg>
-          <button
-            onClick={toggleCompleted}
-            className={`btn ${
-              props.todo.completed ? 'btn-primary' : 'btn-success'
-            }`}
-          >
-            {props.todo.completed ? 'Mark as Uncompleted' : 'Mark as Completed'}
+          </svg> */}
+          <button onClick={addTodo} className="btn btn-primary">
+            Add Todo
           </button>
         </div>
       </Modal.Body>
+      {/* <Modal.Footer> */}
+
+      {/* </Modal.Footer> */}
     </Modal>
   );
 }
 
-export default TodoModal;
+export default AddTodoModal;
